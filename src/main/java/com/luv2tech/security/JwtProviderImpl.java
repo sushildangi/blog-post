@@ -1,10 +1,9 @@
 package com.luv2tech.security;
 
 import com.luv2tech.exception.SpringBlogException;
-import com.luv2tech.model.User;
 import com.luv2tech.service.UserPrincipal;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +12,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.*;
 import java.security.cert.CertificateException;
+import java.util.Date;
 
 @Service
 public class JwtProviderImpl implements JwtProvider {
 
     private KeyStore keyStore;
+    private final int jwtExpirationInMs = 60 * 60 * 60 * 24;
 
     @PostConstruct
     public void init() {
@@ -33,10 +34,15 @@ public class JwtProviderImpl implements JwtProvider {
 
     @Override
     public String generateToken(Authentication authentication) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
         UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
         return Jwts.builder()
                 .setSubject(principal.getUsername())
                 .signWith(getPrivateKey())
+                .setIssuedAt(new Date())
+                .setIssuer("BlogPost")
+                .setExpiration(expiryDate)
                 .compact();
     }
 
@@ -50,11 +56,22 @@ public class JwtProviderImpl implements JwtProvider {
 
     @Override
     public boolean validateToken(String jwt) {
-        Jwts.parser().setSigningKey(getPublickey()).parseClaimsJws(jwt);
-        return true;
+        try {
+            Jwts.parser().setSigningKey(getPublicKey()).parseClaimsJws(jwt);
+            return true;
+        } catch (MalformedJwtException | SignatureException ex) {
+            logger.error("Invalid JWT token");
+        } catch (ExpiredJwtException ex) {
+            logger.error("Expired JWT token");
+        } catch (UnsupportedJwtException ex) {
+            logger.error("Unsupported JWT token");
+        } catch (IllegalArgumentException ex) {
+            logger.error("JWT claims string is empty.");
+        }
+        return false;
     }
 
-    private PublicKey getPublickey() {
+    private PublicKey getPublicKey() {
         try {
             return keyStore.getCertificate("springblog").getPublicKey();
         } catch (KeyStoreException e) {
@@ -65,7 +82,7 @@ public class JwtProviderImpl implements JwtProvider {
     @Override
     public String getUsernameFromJWT(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(getPublickey())
+                .setSigningKey(getPublicKey())
                 .parseClaimsJws(token)
                 .getBody();
 

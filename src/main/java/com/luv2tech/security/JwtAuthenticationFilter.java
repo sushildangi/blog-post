@@ -1,6 +1,5 @@
 package com.luv2tech.security;
 
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +18,8 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JwtProviderImpl jwtProvider;
+    private JwtProvider jwtProvider;
+
     @Autowired
     private UserDetailsService userDetailsService;
 

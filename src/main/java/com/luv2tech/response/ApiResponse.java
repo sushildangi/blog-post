@@ -12,7 +12,7 @@ import java.time.Instant;
 public class ApiResponse {
 
     private String timestamp;
-    private HttpStatus status;
+    private Integer status;
     private Boolean success;
     private String message;
     private String path;

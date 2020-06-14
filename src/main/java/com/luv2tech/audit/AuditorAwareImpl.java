@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class AuditorAwareImpl implements AuditorAware<User> {
+public class AuditorAwareImpl implements AuditorAware<String> {
 
 
     private User getCurrentUser() {
@@ -20,15 +20,15 @@ public class AuditorAwareImpl implements AuditorAware<User> {
         } else {
             return null;
         }
-
     }
 
     @Override
-    public Optional<User> getCurrentAuditor() {
+    public Optional<String> getCurrentAuditor() {
         User currentUser = getCurrentUser();
         if (currentUser == null) {
             return Optional.empty();
         }
-        return Optional.of(currentUser);
+        return Optional.of(currentUser.getId());
     }
+
 }

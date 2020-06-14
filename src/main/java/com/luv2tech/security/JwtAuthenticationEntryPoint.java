@@ -28,13 +28,14 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         // httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setTimestamp(Instant.now().toString());
-        apiResponse.setStatus(HttpStatus.UNAUTHORIZED);
+        apiResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
         apiResponse.setError(HttpStatus.UNAUTHORIZED.name());
         apiResponse.setMessage(e.getMessage());
         apiResponse.setSuccess(false);
         apiResponse.setPath(request.getRequestURI().substring(request.getContextPath().length()));
         ObjectMapper mapper = new ObjectMapper();
         response.setContentType("application/json;charset=UTF-8");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().write(mapper.writeValueAsString(apiResponse));
     }
 }

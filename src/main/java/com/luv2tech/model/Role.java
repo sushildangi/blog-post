@@ -3,6 +3,7 @@ package com.luv2tech.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -13,9 +14,10 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Role {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     @Column(name = "id", updatable = false, nullable = false, unique = true)
-    private Long id;
+    private String id;
 
     @Column(length = 60, name = "name")
     private String name;

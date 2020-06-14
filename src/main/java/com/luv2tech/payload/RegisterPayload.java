@@ -16,5 +16,5 @@ public class RegisterPayload {
     private String username;
     private String email;
     private String password;
-    private Set<Long> roles = new HashSet<>();
+    private Set<String> roles = new HashSet<>();
 }

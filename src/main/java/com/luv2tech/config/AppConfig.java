@@ -1,12 +1,12 @@
 package com.luv2tech.config;
 
 import com.luv2tech.audit.AuditorAwareImpl;
-import com.luv2tech.model.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import org.modelmapper.ModelMapper;
 
 @EnableSwagger2
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
@@ -14,7 +14,12 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class AppConfig {
 
     @Bean
-    public AuditorAware<User> auditorAware() {
+    public AuditorAware<String> auditorAware() {
         return new AuditorAwareImpl();
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 }

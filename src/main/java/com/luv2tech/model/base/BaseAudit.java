@@ -3,6 +3,7 @@ package com.luv2tech.model.base;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -24,9 +25,10 @@ import java.time.Instant;
 public abstract class BaseAudit<U> implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
     @Column(name = "id", unique = true, nullable = false, updatable = false)
-    private Long id;
+    private String id;
 
     @Column(name = "created_date", nullable = false, updatable = false)
     @CreatedDate

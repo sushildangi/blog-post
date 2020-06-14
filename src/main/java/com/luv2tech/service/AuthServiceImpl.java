@@ -39,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
         user.setEmail(payload.getEmail());
         user.setPassword(encodePassword(payload.getPassword()));
         user.setName(payload.getName());
-        for (Long roleId : payload.getRoles()) {
+        for (String roleId : payload.getRoles()) {
             Role role = roleRepository.findById(roleId).orElseThrow(() -> new SpringBlogException("Invalid Role Id :" + roleId));
             roles.add(role);
         }

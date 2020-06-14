@@ -1,5 +1,6 @@
 package com.luv2tech.config;
 
+import com.luv2tech.exception.CustomAccessDeniedHandler;
 import com.luv2tech.security.JwtAuthenticationEntryPoint;
 import com.luv2tech.security.JwtAuthenticationFilter;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
@@ -45,6 +48,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
                 .exceptionHandling()
                 .authenticationEntryPoint(unauthorizedHandler)
+                .accessDeniedHandler(accessDeniedHandler())
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/auth/**")
@@ -78,5 +82,10 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(){
+        return new CustomAccessDeniedHandler();
     }
 }

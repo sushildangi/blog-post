@@ -1,5 +1,7 @@
 package com.luv2tech.util.service;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -18,5 +20,11 @@ public class ErrorCollectorImpl implements ErrorCollector {
                 .stream()
                 .collect(Collectors.toMap(FieldError::getField,
                         FieldError::getDefaultMessage, (a, b) -> b));
+    }
+
+    @Override
+    public ResponseEntity<?> getErrorResponsesEntity(BindingResult result) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(getErrorResponses(result));
     }
 }

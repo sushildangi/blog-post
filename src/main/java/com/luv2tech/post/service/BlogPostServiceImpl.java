@@ -25,9 +25,7 @@ public class BlogPostServiceImpl implements BlogPostService {
                                             BindingResult result) {
         ResponseEntity<?> responseEntity;
         if (result.hasErrors()) {
-            responseEntity = ResponseEntity.
-                    status(HttpStatus.BAD_REQUEST)
-                    .body(errorCollector.getErrorResponses(result));
+            responseEntity = errorCollector.getErrorResponsesEntity(result);
         } else {
             BlogPost blogPost = modelMapper.map(payload, BlogPost.class);
             blogPostRepository.saveAndFlush(blogPost);

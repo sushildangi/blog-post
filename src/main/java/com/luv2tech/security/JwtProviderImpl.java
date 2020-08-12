@@ -18,7 +18,7 @@ import java.util.Date;
 public class JwtProviderImpl implements JwtProvider {
 
     private KeyStore keyStore;
-    private final int jwtExpirationInMs = 60 * 60 * 60 * 24;
+    private final int jwtExpirationInMs = 60;
 
     @PostConstruct
     public void init() {
